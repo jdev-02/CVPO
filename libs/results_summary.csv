@@ -1,0 +1,6 @@
+your_name,make,model,cpu,l1,l2,gpu,using_gpu,image_size,yolo_model,mem_size_gb_specs,mem_size_gb_task_manager,mem_size_gb_process,time_ms_per_frame,cpu_load_proc_pct,gpu_load_proc_pct
+Jonathan Goohs,HP,HP Envy x360 2-in-1 Laptop 16-ad0xxx,AMD Ryzen 7 8840HS w/ Radeon 780M Graphics,512KB,8MB,,No,"(480, 640, 3)",yolo8n,15.3,,0.195,88.41,762.71,0.0
+Jonathan Goohs,HP,HP Envy x360 2-in-1 Laptop 16-ad0xxx,AMD Ryzen 7 8840HS w/ Radeon 780M Graphics,512KB,8MB,,No,"(480, 640, 3)",yolo26n,15.3,,0.235,103.21,771.58,0.0
+Jonathan Goohs,HP,HP Envy x360 2-in-1 Laptop 16-ad0xxx,AMD Ryzen 7 8840HS w/ Radeon 780M Graphics,512KB,8MB,,No,"(480, 640, 3)",yolo26x,15.3,,0.748,800.86,774.61,0.0
+Jonathan Goohs,HP,HP Envy x360 2-in-1 Laptop 16-ad0xxx,AMD Ryzen 7 8840HS w/ Radeon 780M Graphics,512KB,8MB,,No,"(480, 640, 3)",yolo26n-seg,15.3,,0.763,138.03,725.44,0.0
+Jonathan Goohs,HP,HP Envy x360 2-in-1 Laptop 16-ad0xxx,AMD Ryzen 7 8840HS w/ Radeon 780M Graphics,512KB,8MB,,No,"(480, 640, 3)",yolo26n-pose,15.3,,0.774,114.73,754.2,0.0
