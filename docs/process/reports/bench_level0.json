@@ -1,0 +1,37 @@
+{
+  "benchmark": {
+    "benchmark_version": "v1",
+    "workflow": "level0",
+    "env_tag": "local",
+    "repeats": 3,
+    "warmup": 0,
+    "metrics": {
+      "mean_ms": 2.057028003036976,
+      "std_ms": 0.04070411267453015,
+      "p50_ms": 2.082000020891428,
+      "p90_ms": 2.0879671908915043,
+      "p99_ms": 2.0893098041415215,
+      "min_ms": 1.9996250048279762,
+      "max_ms": 2.0894589833915234
+    },
+    "timeseries_ms": [
+      2.0894589833915234,
+      1.9996250048279762,
+      2.082000020891428
+    ],
+    "environment": {
+      "env_tag": "local",
+      "python_version": "3.14.2",
+      "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+      "hardware": {
+        "platform": "macOS-26.3-arm64-arm-64bit-Mach-O",
+        "system": "Darwin",
+        "cpu": "arm",
+        "logical_cores": 10,
+        "ram_gb": 16.0,
+        "gpu_detected": false,
+        "vram_gb": null
+      }
+    }
+  }
+}

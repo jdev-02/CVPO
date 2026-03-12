@@ -1,0 +1,90 @@
+{
+  "workflow": "level3_detect_segment_classify_track",
+  "frame_count": 8,
+  "unique_track_ids": [
+    1
+  ],
+  "input_video": null,
+  "per_frame": [
+    {
+      "frame_index": 0,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 1,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 2,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 3,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 4,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 5,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 6,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    },
+    {
+      "frame_index": 7,
+      "detections": 1,
+      "classes": [
+        "goose"
+      ],
+      "track_ids": [
+        1
+      ]
+    }
+  ]
+}

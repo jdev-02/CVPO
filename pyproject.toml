@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cvpo"
+version = "0.1.0"
+description = "Computer Vision Pipeline Orchestrator (deterministic, educational, zero-cost core)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "CVPO Contributors" }
+]
+dependencies = [
+  "numpy>=1.26.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.6.0"
+]
+
+models = [
+  "torch>=2.2.0",
+  "transformers>=4.42.0",
+  "pillow>=10.0.0",
+  "ultralytics>=8.3.0",
+  "opencv-python>=4.10.0",
+]
+
+ui = [
+  "gradio>=4.44.0",
+]
+
+[project.scripts]
+cvpo = "cvpo.frontends.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

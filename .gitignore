@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+
+# Local development artifacts
+.DS_Store
+
+# Keep class/source materials out of package distribution workflows.
+libs/
