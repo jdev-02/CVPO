@@ -121,29 +121,37 @@ class SigLIPStage(Stage):
 
     @staticmethod
     def _predict_scores_siglip(image: np.ndarray, labels: List[str]) -> Dict[str, float]:
-        """Optional real SigLIP inference path."""
+        """Real zero-shot classification via CLIP (fallback from SigLIP due to tokenizer compat).
+
+        Uses openai/clip-vit-base-patch32 which provides the same contrastive
+        vision-language classification capability.
+
+        Research backing:
+        - Radford et al. 2021 (CLIP): https://openai.com/research/clip
+        - Zhai et al. 2023 (SigLIP): https://arxiv.org/abs/2303.15343
+        """
         try:
+            import torch
             from PIL import Image
-            from transformers import pipeline
-        except Exception as exc:  # pragma: no cover - optional dependency path
+            from transformers import CLIPModel, CLIPProcessor
+        except Exception as exc:  # pragma: no cover
             raise RuntimeError(
-                "SigLIP backend requires optional dependencies (transformers, pillow, torch)."
+                "Real classification backend requires: torch, transformers, pillow. "
+                "Install with: pip install torch transformers pillow"
             ) from exc
 
-        model_id = "google/siglip-base-patch16-224"
-        classifier = pipeline(
-            task="zero-shot-image-classification",
-            model=model_id,
-        )
-        pil_image = Image.fromarray(image.astype(np.uint8))
-        outputs = classifier(images=pil_image, candidate_labels=labels)
-        if not isinstance(outputs, list):
-            outputs = [outputs]
+        model_id = "openai/clip-vit-base-patch32"
+        processor = CLIPProcessor.from_pretrained(model_id)
+        model = CLIPModel.from_pretrained(model_id)
+        model.eval()
 
-        # transformers returns highest-first scores.
-        scores = {entry["label"]: float(entry["score"]) for entry in outputs}
-        # Ensure every label appears in output map.
-        for label in labels:
-            scores.setdefault(label, 0.0)
-        total = sum(scores.values()) + 1e-12
-        return {label: float(score / total) for label, score in scores.items()}
+        pil_image = Image.fromarray(image.astype(np.uint8))
+        texts = [f"a photo of a {label}" for label in labels]
+        inputs = processor(text=texts, images=pil_image, padding=True, return_tensors="pt")
+
+        with torch.no_grad():
+            outputs = model(**inputs)
+
+        probs = outputs.logits_per_image[0].softmax(dim=0).tolist()
+        scores = {label: float(prob) for label, prob in zip(labels, probs)}
+        return scores

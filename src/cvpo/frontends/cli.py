@@ -98,6 +98,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Skip Socratic question prompts in guided workflow output.",
     )
     parser.add_argument(
+        "--real-models",
+        action="store_true",
+        help="Use real model backends (requires model dependencies installed).",
+    )
+    parser.add_argument(
         "--format",
         type=str,
         default="json",
@@ -236,14 +241,19 @@ def main() -> None:
         _save_report(payload, output_format=args.format, report_path=args.save_report)
         _save_benchmark_timeseries_csv(payload, report_path=args.save_report)
         return
+    cls_backend = "siglip" if args.real_models else "deterministic"
+    det_backend = "yolo" if args.real_models else "deterministic"
+    seg_backend = "deterministic"
+
     if args.level0_demo:
         labels = [label.strip() for label in args.labels.split(",") if label.strip()]
-        pipeline = build_level0_pipeline(candidate_labels=labels, backend="deterministic")
+        pipeline = build_level0_pipeline(candidate_labels=labels, backend=cls_backend)
         image = _load_image_or_synthetic(args.input_image)
-        context = PipelineContext(run_id="cli-level0", input_source="synthetic", frontend="cli")
+        context = PipelineContext(run_id="cli-level0", input_source=args.input_image or "synthetic", frontend="cli")
         result = pipeline.run(image, context)
         payload = {
             "pipeline": pipeline.name,
+            "real_models": args.real_models,
             "top_label": result.classes[0].label,
             "confidence": result.classes[0].confidence,
             "scores": dict(result.classes[0].scores),
@@ -253,14 +263,15 @@ def main() -> None:
         return
     if args.level1_demo:
         pipeline = build_level1_pipeline(
-            detection_backend="deterministic",
-            segmentation_backend="deterministic",
+            detection_backend=det_backend,
+            segmentation_backend=seg_backend,
         )
-        image = _load_image_or_synthetic(args.input_image, make_bright_square=True)
-        context = PipelineContext(run_id="cli-level1", input_source="synthetic", frontend="cli")
+        image = _load_image_or_synthetic(args.input_image, make_bright_square=not args.real_models)
+        context = PipelineContext(run_id="cli-level1", input_source=args.input_image or "synthetic", frontend="cli")
         result = pipeline.run(image, context)
         payload = {
             "pipeline": pipeline.name,
+            "real_models": args.real_models,
             "mask_count": len(result.masks),
             "first_mask_pixels": int(result.masks[0].mask.sum()) if result.masks else 0,
         }
@@ -271,9 +282,9 @@ def main() -> None:
         labels = [label.strip() for label in args.labels.split(",") if label.strip()]
         pipeline = build_level2_pipeline(
             candidate_labels=labels,
-            detection_backend="deterministic",
-            segmentation_backend="deterministic",
-            classification_backend="deterministic",
+            detection_backend=det_backend,
+            segmentation_backend=seg_backend,
+            classification_backend=cls_backend,
         )
         image = _load_image_or_synthetic(args.input_image, make_bright_square=True)
         context = PipelineContext(run_id="cli-level2", input_source="synthetic", frontend="cli")
