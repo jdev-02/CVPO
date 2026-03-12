@@ -75,7 +75,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--goal",
         type=str,
         default="geese_tracking",
-        choices=["geese_tracking", "image_labeling"],
+        choices=[
+            "image_labeling",
+            "object_finding",
+            "object_boundaries",
+            "video_tracking",
+            "counting_over_time",
+            "species_identification",
+            "geese_tracking",
+        ],
         help="Problem goal for guided workflow.",
     )
     parser.add_argument(
@@ -375,7 +383,13 @@ def run_level3_demo(
             {
                 "frame_index": frame_idx,
                 "detections": len(det_result.detections),
-                "classes": [entry.label for entry in cls_result.classes],
+                "classes": [
+                    {
+                        "label": entry.label,
+                        "is_fallback": entry.is_fallback,
+                    }
+                    for entry in cls_result.classes
+                ],
                 "track_ids": [track.track_id for track in trk_result.tracks],
             }
         )

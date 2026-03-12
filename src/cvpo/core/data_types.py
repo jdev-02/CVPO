@@ -101,6 +101,7 @@ class ClassificationRegion:
 
     crop: np.ndarray
     detection_index: Optional[int] = None
+    is_fallback: bool = False
 
 
 @dataclass(slots=True)
@@ -121,6 +122,7 @@ class Classification:
     candidate_labels: tuple = ()
     scores: tuple = ()
     detection_index: Optional[int] = None
+    is_fallback: bool = False
 
 
 @dataclass(slots=True)

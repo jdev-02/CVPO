@@ -50,7 +50,7 @@ class SegmentationToClassificationConnector(Connector):
             )
 
         if not regions:
-            regions.append(ClassificationRegion(crop=image.copy(), detection_index=None))
+            regions.append(ClassificationRegion(crop=image.copy(), detection_index=None, is_fallback=True))
 
         return ClassificationInputSet(
             image=image,

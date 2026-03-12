@@ -44,7 +44,8 @@ def test_level3_static_capybara_stable_tracking() -> None:
     assert len(result["unique_track_ids"]) == 1
     for frame in result["per_frame"]:
         assert frame["detections"] >= 1
-        assert "capybara" in frame["classes"]
+        class_labels = [c["label"] if isinstance(c, dict) else c for c in frame["classes"]]
+        assert "capybara" in class_labels
 
 
 @needs_deps
@@ -66,7 +67,8 @@ def test_level3_zoom_maintains_classification() -> None:
     assert result["frame_count"] == 5
     for frame in result["per_frame"]:
         if frame["detections"] >= 1:
-            assert "capybara" in frame["classes"]
+            class_labels = [c["label"] if isinstance(c, dict) else c for c in frame["classes"]]
+            assert "capybara" in class_labels
 
 
 @needs_deps

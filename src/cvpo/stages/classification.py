@@ -54,7 +54,9 @@ class SigLIPStage(Stage):
                 top_label = max(scores, key=scores.get)
                 top_score = float(scores[top_label])
                 classes.append(self._make_classification(
-                    top_label, top_score, scores, detection_index=region.detection_index,
+                    top_label, top_score, scores,
+                    detection_index=region.detection_index,
+                    is_fallback=region.is_fallback,
                 ))
             return ClassificationResult(image=image, classes=classes, model_name=self.config.model_name)
 
@@ -75,6 +77,7 @@ class SigLIPStage(Stage):
         confidence: float,
         scores: Dict[str, float],
         detection_index: int | None = None,
+        is_fallback: bool = False,
     ) -> Classification:
         return Classification(
             label=label,
@@ -82,6 +85,7 @@ class SigLIPStage(Stage):
             candidate_labels=tuple(self.candidate_labels),
             scores=tuple(sorted(scores.items())),
             detection_index=detection_index,
+            is_fallback=is_fallback,
         )
 
     def _predict(self, image: np.ndarray) -> Dict[str, float]:
