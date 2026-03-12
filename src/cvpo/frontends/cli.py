@@ -298,7 +298,14 @@ def main() -> None:
         _save_report(payload, output_format=args.format, report_path=args.save_report)
         return
     if args.level3_demo:
-        payload = run_level3_demo(input_video=args.input_video, max_frames=args.max_frames)
+        labels = [label.strip() for label in args.labels.split(",") if label.strip()]
+        payload = run_level3_demo(
+            input_video=args.input_video,
+            max_frames=args.max_frames,
+            labels=labels,
+            detection_backend=det_backend,
+            classification_backend=cls_backend,
+        )
         _emit(payload, output_format=args.format)
         _save_report(payload, output_format=args.format, report_path=args.save_report)
         return
@@ -322,19 +329,26 @@ def main() -> None:
     parser.print_help()
 
 
-def run_level3_demo(input_video: str | None = None, max_frames: int = 8) -> dict:
-    labels = ["goose", "duck", "pigeon", "crow"]
+def run_level3_demo(
+    input_video: str | None = None,
+    max_frames: int = 8,
+    labels: list[str] | None = None,
+    detection_backend: str = "deterministic",
+    classification_backend: str = "deterministic",
+) -> dict:
+    if labels is None:
+        labels = ["goose", "duck", "pigeon", "crow"]
     level2 = build_level2_pipeline(
         candidate_labels=labels,
-        detection_backend="deterministic",
+        detection_backend=detection_backend,
         segmentation_backend="deterministic",
-        classification_backend="deterministic",
+        classification_backend=classification_backend,
     )
     tracker = ByteTrackStage(
         StageConfig(name="tracking", model_name="bytetrack", params={"max_distance": 45.0})
     )
     detector = YOLOv8Stage(
-        StageConfig(name="detection", model_name="yolov8", params={"backend": "deterministic"})
+        StageConfig(name="detection", model_name="yolov8", params={"backend": detection_backend})
     )
 
     from cvpo.core.data_types import TrackState
