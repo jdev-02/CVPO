@@ -13,3 +13,4 @@ build/
 
 # Keep class/source materials out of package distribution workflows.
 libs/
+*.pt
