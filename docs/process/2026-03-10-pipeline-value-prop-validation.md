@@ -53,6 +53,49 @@ Capybara is not in COCO's 80-class vocabulary, making it an ideal edge case:
 - It demonstrates the practical scenario users will encounter: "my object isn't in
   the detector's built-in categories."
 
+## Additional Validation Cases
+
+### cow.jpg — COCO-native object (control case)
+
+| Method | Result | Correct? |
+|--------|--------|----------|
+| Level 0 (CLIP only) | "cow" (97.9%) | Yes |
+| Level 2 (YOLO -> CLIP) | "cow" — YOLO found no detections (close-up), fallback classified full image | Yes |
+
+**Observation**: When YOLO doesn't detect an object (unusual angle, close-up), the
+pipeline's fallback behavior classifies the entire image. The pipeline doesn't break
+— it degrades gracefully.
+
+### gg_bridge.jpg — Scene with incidental objects
+
+| Method | Result | Notes |
+|--------|--------|-------|
+| Level 0 (CLIP only) | "bridge" (98.4%) | Correct whole-image classification |
+| Level 2 (YOLO -> CLIP) | YOLO detected "boat", CLIP classified crop as "bridge" | YOLO found a boat in the water. The crop region still contains bridge structure, so CLIP correctly said "bridge" from the provided labels. |
+
+**Observation**: YOLO detected an incidental object (boat) rather than the dominant
+subject (bridge). The pipeline's result depends on what YOLO finds — a reminder that
+detection-driven pipelines are bounded by the detector's focus. For scene-level
+understanding, Level 0 classification alone may be more appropriate than Level 2.
+
+### trees_forest.jpg — Nature scene
+
+| Method | Result | Correct? |
+|--------|--------|----------|
+| Level 0 (CLIP only) | "forest" (97.6%) | Yes |
+
+**Observation**: Straightforward scene classification. CLIP confidently distinguishes
+forest from park (2.4%), desert, city, and ocean.
+
+## Summary of Cross-Image Validation
+
+| Image | YOLO Detection | CLIP Level 0 | Pipeline Level 2 | Key Insight |
+|-------|---------------|-------------|-------------------|-------------|
+| capybara.jpg | "bear" (90%) | "capybara" (99.8%) | "capybara" | Pipeline corrects closed-vocabulary limitation |
+| cow.jpg | No detection | "cow" (97.9%) | "cow" (fallback) | Graceful degradation when detector misses |
+| gg_bridge.jpg | "boat" (detected) | "bridge" (98.4%) | "bridge" (from boat crop) | Detection focus != scene subject |
+| trees_forest.jpg | n/a | "forest" (97.6%) | n/a | Clean baseline |
+
 ## Research Backing
 
 - Closed-vocabulary detection: Lin et al. 2014 (COCO), Jocher et al. 2023 (YOLOv8)
